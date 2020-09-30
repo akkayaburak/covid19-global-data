@@ -1,4 +1,5 @@
-﻿@{
+﻿@model DataViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -19,7 +20,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(var item in ViewBag.All) {
+            @foreach(var item in Model.Datas) {
                 <tr>
                     <th scope="row"></th>
                     <td>@item.Country</td>

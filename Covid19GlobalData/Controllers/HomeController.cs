@@ -18,9 +18,11 @@ namespace Covid19GlobalData.Controllers
             //var searchResponse = client.Search<Data>(s => s.Index("covid19-global-data").Query(q => q.MatchAll()));
             var searchResponse = client.Search<Data>(s => s.From(0).Take(10000).MatchAll());
             //var searchResponse = client.Search<Data>(s => s.Query(q => q.Term(f => f.Country, "Turkey")).Size(20).Explain());
-            var docs = searchResponse.Documents.Select(f => f).ToList();
-            ViewBag.All = docs;
-            return View();
+            var dataViewModel = new DataViewModel { 
+                Datas = searchResponse.Documents.Select(f => f).ToList()
+            }; 
+            //dataViewModel = searchResponse.Documents.Select(f => f).ToList();
+            return View(dataViewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
