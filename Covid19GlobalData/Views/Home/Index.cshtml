@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@foreach (var item in ViewBag.All)
+{
+    <div class="row">
+        <p> Country : @item.Country</p>
+        <p> Cumulative Deaths : @item.CumulativeDeaths </p>
+        <p> Country Code : @item.CountryCode </p>
+        <p> New Cases : @item.NewCases </p>
+        <p> Cumulative Deaths : @item.CumulativeDeaths </p>
+        <p> Who Region : @item.WhoRegion </p>
+        <p> New Deaths : @item.NewDeaths </p>
+        <p> Date Reported : @item.DateReported </p>
+    </div>
+    
+}
+
