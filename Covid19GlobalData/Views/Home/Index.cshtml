@@ -2,18 +2,35 @@
     ViewData["Title"] = "Home Page";
 }
 
-@foreach (var item in ViewBag.All)
-{
-    <div class="row">
-        <p> Country : @item.Country</p>
-        <p> Cumulative Deaths : @item.CumulativeDeaths </p>
-        <p> Country Code : @item.CountryCode </p>
-        <p> New Cases : @item.NewCases </p>
-        <p> Cumulative Deaths : @item.CumulativeDeaths </p>
-        <p> Who Region : @item.WhoRegion </p>
-        <p> New Deaths : @item.NewDeaths </p>
-        <p> Date Reported : @item.DateReported </p>
-    </div>
-    
-}
 
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Global Data</th>
+                <th scope="col">Country</th>
+                <th scope="col">Cumulative Deaths</th>
+                <th scope="col">Country Code</th>
+                <th scope="col">New Cases</th>
+                <th scope="col">Cumulative Cases</th>
+                <th scope="col">WHO Region</th>
+                <th scope="col">New Deaths</th>
+                <th scope="col">Date Reported</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in ViewBag.All) {
+                <tr>
+                    <th scope="row"></th>
+                    <td>@item.Country</td>
+                    <td>@item.CumulativeDeaths</td>
+                    <td>@item.CountryCode</td>
+                    <td>@item.NewCases</td>
+                    <td>@item.CumulativeDeaths</td>
+                    <td>@item.WhoRegion</td>
+                    <td>@item.NewDeaths</td>
+                    <td>@item.DateReported</td>
+                </tr>
+            }
+        </tbody>
+    </table>
