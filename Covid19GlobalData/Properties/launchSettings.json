@@ -23,5 +23,9 @@
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }
+  },
+  "elasticsearch": {
+    "index":"covid19-global-data",
+    "url" :"http://localhost:9200/"
   }
 }

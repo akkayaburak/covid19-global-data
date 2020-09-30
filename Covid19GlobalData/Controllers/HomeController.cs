@@ -5,23 +5,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Covid19GlobalData.Models;
+using Covid19GlobalData.Extensions;
 using Nest;
 
 namespace Covid19GlobalData.Controllers
 {
     public class HomeController : Controller
     {
+        private IElasticClient _elasticClient;
+        public HomeController(IElasticClient elasticClient)
+        {
+            _elasticClient = elasticClient;
+        }
         public IActionResult Index()
         {
-            var settings = new ConnectionSettings(new Uri("http://localhost:9200")).DefaultIndex("covid19-global-data");
-            var client = new ElasticClient(settings);
-            //var searchResponse = client.Search<Data>(s => s.Index("covid19-global-data").Query(q => q.MatchAll()));
-            var searchResponse = client.Search<Data>(s => s.From(0).Take(10000).MatchAll());
-            //var searchResponse = client.Search<Data>(s => s.Query(q => q.Term(f => f.Country, "Turkey")).Size(20).Explain());
+            var searchResponse = _elasticClient.Search<Data>(s => s.From(0).Take(10000).MatchAll());
             var dataViewModel = new DataViewModel { 
                 Datas = searchResponse.Documents.Select(f => f).ToList()
             }; 
-            //dataViewModel = searchResponse.Documents.Select(f => f).ToList();
             return View(dataViewModel);
         }
 

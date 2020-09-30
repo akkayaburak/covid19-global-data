@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using Covid19GlobalData.Interfaces;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Covid19GlobalData.Models
 {
-    public class Data
+    public class Data : IData
     {
         [Keyword(Name=" Country")]
         public string Country { get; set; }
