@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Covid19GlobalData.Models
 {
-    public class Data
+    public class DailyCovid
     {
         [Keyword(Name=" Country")]
         public string Country { get; set; }

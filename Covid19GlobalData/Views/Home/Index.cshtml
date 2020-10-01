@@ -1,9 +1,15 @@
-﻿@model DataViewModel
+﻿
+@model DailyCovidViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
 
-
+    <select class="form-control">
+        @foreach(var item in Model.Countries.Select(x => x.CountryName).Distinct())
+        {
+            <option>@Html.DisplayFor(x => item)</option>
+        }
+    </select>
     <table class="table table-hover">
         <thead>
             <tr>
@@ -16,11 +22,11 @@
                 <th scope="col">WHO Region</th>
                 <th scope="col">New Deaths</th>
                 <th scope="col">Date Reported</th>
-
             </tr>
         </thead>
         <tbody>
-            @foreach(var item in Model.Datas) {
+            @foreach(var item in Model.DailyCovids)
+            {
                 <tr>
                     <th scope="row"></th>
                     <td>@item.Country</td>

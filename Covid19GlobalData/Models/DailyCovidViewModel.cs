@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Covid19GlobalData.Models
 {
-    public class DataViewModel
+    public class DailyCovidViewModel
     {
-        public List<Data> Datas{get; set;}
+        public List<DailyCovid> DailyCovids { get; set; }
+        public List<Country> Countries;
     }
 }
