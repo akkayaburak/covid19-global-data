@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Covid19GlobalData.Models;
 using Covid19GlobalData.Extensions;
 using Nest;
+using MoreLinq;
 
 namespace Covid19GlobalData.Controllers
 {
@@ -20,20 +21,29 @@ namespace Covid19GlobalData.Controllers
         public IActionResult Index()
         {
             var searchResponse = _elasticClient.Search<DailyCovid>(s => s.From(0).Take(10000).MatchAll().Sort(ss => ss.Descending(d => d.DateReported) ));
-            
-            //var searchResponse = _elasticClient.Search<Data>(s => s
-            //.Aggregations(a => a.Terms("countiries_agg", t => t
-            //.Field(p => p.Country).Aggregations(ab => ab.Cardinality("countiries_car", c => c.Field(p => p.Country))))));
-
-            var countrySearch = _elasticClient.Search<DailyCovid>(s => s.Aggregations(a => a.Terms("countiries", t => t.Field(f => f.Country).Size(200))));
-            //var agg = searchResponse.Aggregations.Terms("t").Buckets.ToList();
-            //var countrySearch = _elasticClient.Search<DailyCovid>(s => s.From(0).Take(200).Aggregations(a => a.Terms("countiries", t => t.Field(f => f.Country))));
-            var countiries = countrySearch.Aggregations.Terms("countiries").Buckets.ToList();
-            List<Country> countiriesList = new List<Country>();
-            foreach (var item in countiries)
+            //var countrySearch = _elasticClient.Search<DailyCovid>(s => s
+            //.Query(q => q
+            //.Match(m => m
+            //.Field(f => f
+            //.CountryCode)
+            //        )
+            //     )
+            //);
+            //.Aggregations(a => a.Terms("countiries", t => t.Field(f => f.Country).Size(200))));
+            //var countrySearch = _elasticClient.Search<DailyCovid>(s => s.Query(q => q.MultiMatch(mm => mm.Fields(f => f
+            //      .Field(ff => ff.Country).Field(ff => ff.CountryCode)))).Size(200));           
+            //var cslist = countrySearch.Documents.ToList();
+            //var countiries = countrySearch.Aggregations.Terms("countiries").Buckets.ToList();
+            //var countiries2 = _elasticClient.Search<Country>(s => s.StoredFields(sf => sf.Fields(f => f.CountryCode, f => f.CountryName)).Query(q => q.MatchAll()));
+            //var countries = _elasticClient.Search<Country>(s => s.From(0).Take(10000).Source(sf => sf.Includes(i => i.Fields(f => f.CountryCode, f => f.CountryName))).Query(q => q.MatchAll()));
+            var countries = searchResponse.Documents.ToList();
+            var distinctByCountry = searchResponse.Documents.ToList().DistinctBy(x=>x.CountryCode);
+            List<Country> countriesList = new List<Country>();
+            foreach (var item in distinctByCountry)
             {
-                countiriesList.Add(new Country(item.Key));
+                countriesList.Add(new Country(item.Country, item.CountryCode));
             }
+            #region searchByValue
             //var searchResponse = _elasticClient.Search<DailyCovid>(s => s
             //.Query(q => q
             //.Term(c => c
@@ -44,18 +54,15 @@ namespace Covid19GlobalData.Controllers
             //.Sort(ss => ss
             //.Descending(d => d.DateReported)));
             //var searchResponseList = searchResponse.Documents.ToList();
+            #endregion
             var viewModelList = new DailyCovidViewModel
             {
-                DailyCovids = searchResponse.Documents.ToList(),
-                Countries = countiriesList
+                DailyCovids = countries,
+                Countries = countriesList
             };
             return View(viewModelList);
         }
-        public IActionResult Search(DailyCovidViewModel model) 
-        {
-            return View();
-        
-        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

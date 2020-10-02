@@ -5,9 +5,9 @@
 }
 
     <select class="form-control">
-        @foreach(var item in Model.Countries.Select(x => x.CountryName).Distinct())
+        @foreach(var item in Model.Countries)
         {
-            <option>@Html.DisplayFor(x => item)</option>
+            <option value="@item.CountryCode">@item.CountryName</option>
         }
     </select>
     <table class="table table-hover">
@@ -41,3 +41,6 @@
             }
         </tbody>
     </table>
+    <script>
+
+    </script>
