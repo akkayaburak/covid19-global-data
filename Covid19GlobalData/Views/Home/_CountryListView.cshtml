@@ -1,0 +1,20 @@
+﻿@model List<DailyCovid>
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-12">
+            <label>Ülke Seçimi</label>
+        </div>
+        <div class="col-md-5">
+            <select id="select" class="form-control">
+                @if (Model != null)
+                {
+                    <option value="" selected disabled hidden>Choose a country</option>
+                    @foreach (var item in Model)
+                    {
+                        <option class="option" value="@item.CountryCode">@item.Country</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+</div>

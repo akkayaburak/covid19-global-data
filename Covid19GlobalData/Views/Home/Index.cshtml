@@ -2,53 +2,36 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-<div class="container">
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-5">
-                <select id="select" class="form-control">
-                    @if (Model.DailyCovids != null)
-                    {
-                        <option value="" selected disabled hidden>Choose a country</option>
-                        @foreach (var item in Model.DailyCovids)
-                        {
-                            <option class="option" value="@item.CountryCode">@item.Country</option>
-                        }
-                    }
-
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Country</th>
-                <th scope="col">Cumulative Deaths</th>
-                <th scope="col">Country Code</th>
-                <th scope="col">New Cases</th>
-                <th scope="col">Cumulative Cases</th>
-                <th scope="col">WHO Region</th>
-                <th scope="col">New Deaths</th>
-                <th scope="col">Date Reported</th>
-            </tr>
-        </thead>
-        <tbody id="cvDataTbl">
-            @foreach (var item in Model.DailyCovids)
-            {
-                <tr class="cv-data">
-                    @*<th scope="row"></th>*@
-                    <td>@item.Country</td>
-                    <td>@item.CumulativeDeaths</td>
-                    <td>@item.CountryCode</td>
-                    <td>@item.NewCases</td>
-                    <td>@item.CumulativeDeaths</td>
-                    <td>@item.WhoRegion</td>
-                    <td>@item.NewDeaths</td>
-                    <td>@item.DateReported</td>
+    <div class="container">        
+        @Html.Partial("_CountryListView", Model.DailyCovids)
+        <table id="dt" class="table table-hover table-striped table-bordered table-sm" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th scope="col">Country</th>
+                    <th scope="col">Cumulative Deaths</th>
+                    <th scope="col">Country Code</th>
+                    <th scope="col">New Cases</th>
+                    <th scope="col">Cumulative Cases</th>
+                    <th scope="col">WHO Region</th>
+                    <th scope="col">New Deaths</th>
+                    <th scope="col">Date Reported</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody id="cvDataTbl">
+                @foreach (var item in Model.DailyCovids)
+                {
+                    <tr class="cv-data">
+                        @*<th scope="row"></th>*@
+                        <td>@item.Country</td>
+                        <td>@item.CumulativeDeaths</td>
+                        <td>@item.CountryCode</td>
+                        <td>@item.NewCases</td>
+                        <td>@item.CumulativeDeaths</td>
+                        <td>@item.WhoRegion</td>
+                        <td>@item.NewDeaths</td>
+                        <td>@item.DateReported.ToString("d/MM/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
