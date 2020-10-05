@@ -7,11 +7,12 @@
         <div class="row">
             <div class="col-md-5">
                 <select id="select" class="form-control">
-                    @if (Model.Countries != null)
+                    @if (Model.DailyCovids != null)
                     {
-                        @foreach (var item in Model.Countries)
+                        <option value="" selected disabled hidden>Choose a country</option>
+                        @foreach (var item in Model.DailyCovids)
                         {
-                            <option class="option" value="@item.CountryCode">@item.CountryName</option>
+                            <option class="option" value="@item.CountryCode">@item.Country</option>
                         }
                     }
 

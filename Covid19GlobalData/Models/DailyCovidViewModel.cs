@@ -8,6 +8,6 @@ namespace Covid19GlobalData.Models
     public class DailyCovidViewModel
     {
         public List<DailyCovid> DailyCovids { get; set; }
-        public IEnumerable<Country> Countries;
+        //public IEnumerable<Country> Countries;
     }
 }

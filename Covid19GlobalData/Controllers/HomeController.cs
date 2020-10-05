@@ -21,31 +21,10 @@ namespace Covid19GlobalData.Controllers
         public IActionResult Index()
         {
             var searchResponse = _elasticClient.Search<DailyCovid>(s => s.From(0).Take(100).MatchAll().Sort(ss => ss.Descending(d => d.DateReported) ));
-            #region
-            //var countrySearch = _elasticClient.Search<DailyCovid>(s => s
-            //.Query(q => q
-            //.Match(m => m
-            //.Field(f => f
-            //.CountryCode)
-            //        )
-            //     )
-            //);
-            //.Aggregations(a => a.Terms("countiries", t => t.Field(f => f.Country).Size(200))));
-            //var countrySearch = _elasticClient.Search<DailyCovid>(s => s.Query(q => q.MultiMatch(mm => mm.Fields(f => f
-            //      .Field(ff => ff.Country).Field(ff => ff.CountryCode)))).Size(200));           
-            //var cslist = countrySearch.Documents.ToList();
-            //var countiries = countrySearch.Aggregations.Terms("countiries").Buckets.ToList();
-            //var countiries2 = _elasticClient.Search<Country>(s => s.StoredFields(sf => sf.Fields(f => f.CountryCode, f => f.CountryName)).Query(q => q.MatchAll()));
-            //var countries = _elasticClient.Search<Country>(s => s.From(0).Take(10000).Source(sf => sf.Includes(i => i.Fields(f => f.CountryCode, f => f.CountryName))).Query(q => q.MatchAll()));
-            #endregion
-            var countries = searchResponse.Documents.ToList();
-            var countriesList = GetCountries(searchResponse);
-            #region searchByValue
-            #endregion
+            var dailyCovids = searchResponse.Documents.ToList();
             var viewModelList = new DailyCovidViewModel
             {
-                DailyCovids = countries,
-                Countries = countriesList
+                DailyCovids = dailyCovids
             };
             return View(viewModelList);
         }
@@ -63,10 +42,8 @@ namespace Covid19GlobalData.Controllers
             .Sort(ss => ss
             .Descending(d => d.DateReported)));
             var searchResponseList = searchResponse.Documents.ToList();         
-            var countriesList = GetCountries(searchResponse);
             var dailyCovidViewModel = new DailyCovidViewModel
             {
-                Countries = countriesList,
                 DailyCovids = searchResponseList
             };
             return Ok(dailyCovidViewModel);
@@ -76,17 +53,6 @@ namespace Covid19GlobalData.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        public List<Country> GetCountries(ISearchResponse<DailyCovid> searchResponse)
-        {
-            var distinctByCountry = searchResponse.Documents.ToList().DistinctBy(x => x.CountryCode);
-            List<Country> countriesList = new List<Country>();
-            foreach (var item in distinctByCountry)
-            {
-                countriesList.Add(new Country(item.Country, item.CountryCode));
-            }
-            return countriesList;
         }
     }
 }
