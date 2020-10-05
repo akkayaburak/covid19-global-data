@@ -13,7 +13,7 @@ namespace Covid19GlobalData.Controllers
 {
     public class HomeController : Controller
     {
-        private IElasticClient _elasticClient;
+        private readonly IElasticClient _elasticClient;
         public HomeController(IElasticClient elasticClient)
         {
             _elasticClient = elasticClient;
@@ -39,12 +39,7 @@ namespace Covid19GlobalData.Controllers
             //var countries = _elasticClient.Search<Country>(s => s.From(0).Take(10000).Source(sf => sf.Includes(i => i.Fields(f => f.CountryCode, f => f.CountryName))).Query(q => q.MatchAll()));
             #endregion
             var countries = searchResponse.Documents.ToList();
-            var distinctByCountry = searchResponse.Documents.ToList().DistinctBy(x=>x.CountryCode);
-            List<Country> countriesList = new List<Country>();
-            foreach (var item in distinctByCountry)
-            {
-                countriesList.Add(new Country(item.Country, item.CountryCode));
-            }
+            var countriesList = GetCountries(searchResponse);
             #region searchByValue
             #endregion
             var viewModelList = new DailyCovidViewModel
@@ -67,19 +62,31 @@ namespace Covid19GlobalData.Controllers
             .Size(200)
             .Sort(ss => ss
             .Descending(d => d.DateReported)));
-            var searchResponseList = searchResponse.Documents.ToList();
+            var searchResponseList = searchResponse.Documents.ToList();         
+            var countriesList = GetCountries(searchResponse);
             var dailyCovidViewModel = new DailyCovidViewModel
             {
-                Countries = null,
+                Countries = countriesList,
                 DailyCovids = searchResponseList
             };
-            return View("Index",dailyCovidViewModel);
-            //return RedirectToAction("Index", "Home", dailyCovidViewModel);
+            return Ok(dailyCovidViewModel);
         }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public List<Country> GetCountries(ISearchResponse<DailyCovid> searchResponse)
+        {
+            var distinctByCountry = searchResponse.Documents.ToList().DistinctBy(x => x.CountryCode);
+            List<Country> countriesList = new List<Country>();
+            foreach (var item in distinctByCountry)
+            {
+                countriesList.Add(new Country(item.Country, item.CountryCode));
+            }
+            return countriesList;
         }
     }
 }
