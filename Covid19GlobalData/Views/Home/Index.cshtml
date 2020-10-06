@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-    <div class="container">        
+    <div class="container">
         @Html.Partial("_CountryListView", Model.DailyCovids)
         <table id="dt" class="table table-hover table-striped table-bordered table-sm" cellspacing="0" width="100%">
             <thead>
@@ -26,7 +26,7 @@
                         <td>@item.CumulativeDeaths</td>
                         <td>@item.CountryCode</td>
                         <td>@item.NewCases</td>
-                        <td>@item.CumulativeDeaths</td>
+                        <td>@item.CumulativeCases</td>
                         <td>@item.WhoRegion</td>
                         <td>@item.NewDeaths</td>
                         <td>@item.DateReported.ToString("d/MM/yyyy")</td>
