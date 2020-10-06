@@ -8,6 +8,7 @@ using Covid19GlobalData.Models;
 using Covid19GlobalData.Extensions;
 using Nest;
 using MoreLinq;
+using Newtonsoft.Json.Linq;
 
 namespace Covid19GlobalData.Controllers
 {
@@ -30,14 +31,15 @@ namespace Covid19GlobalData.Controllers
         }
         
         [HttpPost]
-        public IActionResult GetDailyCovidByFilters([FromBody] JsonResult selectedFields)
+        public JsonResult GetDailyCovidByFilters([FromBody] JsonResult selectedFields)
         {
+            var json = selectedFields;       
             var searchResponse = _elasticClient.Search<DailyCovid>(s => s
             .Query(q => q
             .Term(c => c
             .Name("by_country")
             .Field(p => p.CountryCode)
-            .Value(selectedFields)))
+            .Value("TR")))
             .Size(200)
             .Sort(ss => ss
             .Descending(d => d.DateReported)));
@@ -46,7 +48,7 @@ namespace Covid19GlobalData.Controllers
             {
                 DailyCovids = searchResponseList
             };
-            return Ok(dailyCovidViewModel);
+            return Json(dailyCovidViewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

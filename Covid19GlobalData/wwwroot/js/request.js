@@ -11,13 +11,10 @@
         DateReported: ""
     };
     var data = JSON.stringify(model);
-    var json = {
-           "json" : data
-    }
-   
+    console.log(data);
     $.ajax({
-        url: "Home/GetDailyCovidByFields",
-        data: json,
+        url: "/Home/GetDailyCovidByFilters",
+        data: data,
         type: "POST",
         contentType:"application/json",
         success: function (result) {

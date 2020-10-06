@@ -14,9 +14,4 @@
     <PackageReference Include="NEST" Version="7.9.0" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>
