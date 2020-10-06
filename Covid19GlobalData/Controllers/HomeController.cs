@@ -20,7 +20,7 @@ namespace Covid19GlobalData.Controllers
         }
         public IActionResult Index()
         {
-            var searchResponse = _elasticClient.Search<DailyCovid>(s => s.From(0).Take(100).MatchAll().Sort(ss => ss.Descending(d => d.DateReported) ));
+            var searchResponse = _elasticClient.Search<DailyCovid>(s => s.From(0).Take(1000).MatchAll().Sort(ss => ss.Descending(d => d.DateReported) ));
             var dailyCovids = searchResponse.Documents.ToList();
             var viewModelList = new DailyCovidViewModel
             {
@@ -29,15 +29,15 @@ namespace Covid19GlobalData.Controllers
             return View(viewModelList);
         }
         
-
-        public IActionResult GetDailyCovidByCountry(string countryCode)
+        [HttpPost]
+        public IActionResult GetDailyCovidByFilters([FromBody] JsonResult selectedFields)
         {
             var searchResponse = _elasticClient.Search<DailyCovid>(s => s
             .Query(q => q
             .Term(c => c
             .Name("by_country")
             .Field(p => p.CountryCode)
-            .Value(countryCode)))
+            .Value(selectedFields)))
             .Size(200)
             .Sort(ss => ss
             .Descending(d => d.DateReported)));

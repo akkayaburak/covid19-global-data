@@ -1,20 +1,26 @@
 ﻿@model List<DailyCovid>
+@using MoreLinq
 <div class="form-group">
     <div class="row">
-        <div class="col-md-12">
-            <label>Ülke Seçimi</label>
-        </div>
         <div class="col-md-5">
             <select id="select" class="form-control">
                 @if (Model != null)
                 {
                     <option value="" selected disabled hidden>Choose a country</option>
-                    @foreach (var item in Model)
+                    @foreach (var item in (IEnumerable<dynamic>)Model.DistinctBy(p => p.Country))
                     {
                         <option class="option" value="@item.CountryCode">@item.Country</option>
                     }
                 }
-            </select>
+            </select>            
+        </div>
+        <div class="col-md-3 offset-md-4">
+            <script>
+                $(function () {
+                    $("#datepicker").datepicker();
+                });
+            </script>
+            <input class="input-group-text float-right" type="text" id="datepicker" placeholder="Choose a date">
         </div>
     </div>
 </div>
