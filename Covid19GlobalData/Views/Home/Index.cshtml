@@ -29,7 +29,7 @@
                         <td>@item.CumulativeCases</td>
                         <td>@item.WhoRegion</td>
                         <td>@item.NewDeaths</td>
-                        <td class="date">@item.DateReported.ToString("d/MM/yyyy")</td>
+                        <td class="date">@Convert.ToDateTime(item.DateReported).ToString("d/MM/yyyy")</td>
                     </tr>
                 }
             </tbody>

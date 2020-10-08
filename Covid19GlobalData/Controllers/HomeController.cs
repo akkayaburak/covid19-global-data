@@ -9,6 +9,7 @@ using Covid19GlobalData.Extensions;
 using Nest;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Covid19GlobalData.Controllers
 {
@@ -21,7 +22,7 @@ namespace Covid19GlobalData.Controllers
         }
         public IActionResult Index()
         {
-            var searchResponse = _elasticClient.Search<DailyCovid>(s => s.From(0).Take(1000).MatchAll().Sort(ss => ss.Descending(d => d.DateReported) ));
+            var searchResponse = _elasticClient.Search<DailyCovid>(s => s.From(0).Take(1000).MatchAll().Sort(ss => ss.Descending(d => d.DateReported)));
             var dailyCovids = searchResponse.Documents.ToList();
             var viewModelList = new DailyCovidViewModel
             {
@@ -29,26 +30,32 @@ namespace Covid19GlobalData.Controllers
             };
             return View(viewModelList);
         }
-        
+
         [HttpPost]
-        public JsonResult GetDailyCovidByFilters([FromBody] JsonResult selectedFields)
+        public IActionResult GetDailyCovidByFilters(DailyCovidRequest selectedFields)
         {
-            var json = selectedFields;       
-            var searchResponse = _elasticClient.Search<DailyCovid>(s => s
-            .Query(q => q
-            .Term(c => c
-            .Name("by_country")
-            .Field(p => p.CountryCode)
-            .Value("TR")))
-            .Size(200)
-            .Sort(ss => ss
-            .Descending(d => d.DateReported)));
-            var searchResponseList = searchResponse.Documents.ToList();         
-            var dailyCovidViewModel = new DailyCovidViewModel
+
+            if (ModelState.IsValid)
             {
-                DailyCovids = searchResponseList
-            };
-            return Json(dailyCovidViewModel);
+                var searchResponse = _elasticClient.Search<DailyCovid>(s => s
+                   .Query(q => q
+                   .Term(c => c
+                   .Name("by_country")
+                   .Field(p => p.CountryCode)
+                   .Value(selectedFields.CountryCode)))
+                   .Size(200)
+                   .Sort(ss => ss
+                   .Descending(d => d.DateReported)));
+                var searchResponseList = searchResponse.Documents.ToList();
+                var dailyCovidViewModel = new DailyCovidViewModel
+                {
+                    DailyCovids = searchResponseList
+                };
+                return Json(dailyCovidViewModel);
+            }
+            //var json = selectedFields.ToString();
+            //var result = JsonConvert.DeserializeObject<DailyCovid>(selectedFields);
+            return Json("");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

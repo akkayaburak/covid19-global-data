@@ -1,22 +1,33 @@
 ﻿$('#select').on('change', function () {
     var countryCode = $("#select").val();
     var model = {
-        Country:"",
+        Country: "Test",
         CountryCode: countryCode,
         CumulativeCases: 0,
         CumulativeDeaths: 0,
         NewCases: 0,
         NewDeaths: 0,
-        WhoRegion: "",
-        DateReported: ""
+        WhoRegion: "Test",
+        DateReported: "09-09-2009"
     };
-    var data = JSON.stringify(model);
-    console.log(data);
+   
+    console.log(model);
     $.ajax({
-        url: "/Home/GetDailyCovidByFilters",
-        data: data,
+        url: '/Home/GetDailyCovidByFilters',
+        data: {
+            
+                "Country": "Test",
+                "CountryCode": countryCode,
+                "CumulativeCases": "0",
+                "CumulativeDeaths": "0",
+                "NewCases": "0",
+                "NewDeaths": "0",
+                "WhoRegion": "Test",
+                "DateReported": "09-09-2009"
+            } ,
         type: "POST",
-        contentType:"application/json",
+        contentType: "application/json; charset=utf-8",
+        dataType:"json",
         success: function (result) {
             $(".cv-data").remove();
             $(".span").remove();
