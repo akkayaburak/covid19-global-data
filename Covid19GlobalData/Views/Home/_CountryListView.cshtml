@@ -2,7 +2,7 @@
 @using MoreLinq
 <div class="form-group">
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-6 mb-4">
             <select id="select" class="form-control">
                 @if (Model != null)
                 {
@@ -14,16 +14,19 @@
                 }
             </select>            
         </div>
-        <div class="col-md-3 offset-md-4">
+        <div class="col-6 countCase text-right" >
+
+        </div>
+        <div class="col-6 ">
             <script>
                 $(function () {
                     $("#datepicker").datepicker();
                 });
             </script>
-            <input class="input-group-text float-right" type="text" id="datepicker" placeholder="Choose a date">
+            <input class="input-group-text" type="text" id="datepicker" placeholder="Choose a date">
+        </div>
+        <div class="col-6">               
+                <button type="submit" value="search" class="btn btn-outline-primary float-right" id="searchButton">Search</button>            
         </div>
     </div>
-</div>
-<div class="col-md-6 row">
-    <span class="span"></span>
 </div>

@@ -20,6 +20,8 @@ namespace Covid19GlobalData.Controllers
         {
             _elasticClient = elasticClient;
         }
+
+        [HttpGet]
         public IActionResult Index()
         {
             var searchResponse = _elasticClient.Search<DailyCovid>(s => s.From(0).Take(1000).MatchAll().Sort(ss => ss.Descending(d => d.DateReported)));
@@ -37,41 +39,28 @@ namespace Covid19GlobalData.Controllers
 
             if (ModelState.IsValid)
             {
-                //SearchDescriptor<DailyCovid> parent = new SearchDescriptor<DailyCovid>();
-                //QueryContainerDescriptor<DailyCovid> query = new QueryContainerDescriptor<DailyCovid>();
-                //TermQueryDescriptor<DailyCovid> term = new TermQueryDescriptor<DailyCovid>();
-
-                //if (!string.IsNullOrWhiteSpace(selectedFields.Country))
-                //{
-                //    term = term.Name("by_country"); 
-                //}
-
-                //if (!string.IsNullOrWhiteSpace(selectedFields.CountryCode))
-                //{
-                //    term = term.Name("by_countryCode");
-                //}
-
-                //query.Term();
-
                 var searchResponse = _elasticClient.Search<DailyCovid>(s => s
-                   .Query(q => q
-                   .Term(c => c
-                   .Name("by_country")
-                   .Field(p => p.CountryCode)
-                   .Value(selectedFields.CountryCode.ToString())))
-                   .Size(200)
-                   .Sort(ss => ss
-                   .Descending(d => d.DateReported)));
+               .Query(q => q
+               .Term(c => c
+               .Name("by_country")
+               .Field(p => p.CountryCode)
+               .Value(selectedFields.CountryCode))
+               &&
+               q.Term(c => c
+               .Field(p => p
+               .DateReported)
+               .Value(selectedFields.DateReported)))
+               .Size(200)
+               .Sort(ss => ss
+               .Descending(d => d.DateReported)));
                 var searchResponseList = searchResponse.Documents.ToList();
                 var dailyCovidViewModel = new DailyCovidViewModel
                 {
                     DailyCovids = searchResponseList
                 };
-                return Json(dailyCovidViewModel);
+                return Ok(dailyCovidViewModel);
             }
-            //var json = selectedFields.ToString();
-            //var result = JsonConvert.DeserializeObject<DailyCovid>(selectedFields);
-            return Json("");
+            return Ok("");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
