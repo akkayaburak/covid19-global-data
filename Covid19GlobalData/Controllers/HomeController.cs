@@ -32,17 +32,33 @@ namespace Covid19GlobalData.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetDailyCovidByFilters(DailyCovidRequest selectedFields)
+        public IActionResult GetDailyCovidByFilters([FromBody]DailyCovid selectedFields)
         {
 
             if (ModelState.IsValid)
             {
+                //SearchDescriptor<DailyCovid> parent = new SearchDescriptor<DailyCovid>();
+                //QueryContainerDescriptor<DailyCovid> query = new QueryContainerDescriptor<DailyCovid>();
+                //TermQueryDescriptor<DailyCovid> term = new TermQueryDescriptor<DailyCovid>();
+
+                //if (!string.IsNullOrWhiteSpace(selectedFields.Country))
+                //{
+                //    term = term.Name("by_country"); 
+                //}
+
+                //if (!string.IsNullOrWhiteSpace(selectedFields.CountryCode))
+                //{
+                //    term = term.Name("by_countryCode");
+                //}
+
+                //query.Term();
+
                 var searchResponse = _elasticClient.Search<DailyCovid>(s => s
                    .Query(q => q
                    .Term(c => c
                    .Name("by_country")
                    .Field(p => p.CountryCode)
-                   .Value(selectedFields.CountryCode)))
+                   .Value(selectedFields.CountryCode.ToString())))
                    .Size(200)
                    .Sort(ss => ss
                    .Descending(d => d.DateReported)));

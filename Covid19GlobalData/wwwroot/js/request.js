@@ -12,19 +12,21 @@
     };
    
     console.log(model);
+    var newModel = 
+    {
+        "Country": "Test",
+        "CountryCode": countryCode,
+        "CumulativeCases": "0",
+        "CumulativeDeaths": "0",
+        "NewCases": "0",
+        "NewDeaths": "0",
+        "WhoRegion": "Test",
+        "DateReported": "09-09-2009"
+    };
+
     $.ajax({
         url: '/Home/GetDailyCovidByFilters',
-        data: {
-            
-                "Country": "Test",
-                "CountryCode": countryCode,
-                "CumulativeCases": "0",
-                "CumulativeDeaths": "0",
-                "NewCases": "0",
-                "NewDeaths": "0",
-                "WhoRegion": "Test",
-                "DateReported": "09-09-2009"
-            } ,
+        data: JSON.stringify(newModel),
         type: "POST",
         contentType: "application/json; charset=utf-8",
         dataType:"json",
