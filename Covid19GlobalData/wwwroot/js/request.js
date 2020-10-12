@@ -40,3 +40,20 @@ $('#searchButton').on('click', function () {
     })
 })
 
+$('#maxCase').on('click', function () {
+    $.ajax({
+        url: '/Home/GetMaxCase',
+        type: "GET",
+        dataType: "json",
+        success: function (result) {
+            $(".cv-data").remove();
+            $(".span").remove();
+            $(".countCase").append('<span class="span btn btn-primary">Size : ' + result.dailyCovids.length + '</span>');
+            //$(".container").append('<div class="col-4">' + result.dailyCovids.length + '</div>');
+            $.each(result.dailyCovids, function (key, value) {
+                var string = '<tr class="cv-data"><td>' + value.country + '</td><td>' + value.cumulativeDeaths + '</td><td>' + value.countryCode + '</td><td>' + value.newCases + '</td><td>' + value.cumulativeCases + '</td><td>' + value.whoRegion + '</td><td>' + value.newDeaths + '</td><td>' + value.dateReported.replace("-", "/").replace("-", "/").replace("T00:00:00", "") + '</td></tr >'
+                $('#cvDataTbl').append(string);
+            });
+        }
+    })
+})

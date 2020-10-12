@@ -25,7 +25,7 @@ namespace Covid19GlobalData.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var searchResponse = _elasticClient.Search<DailyCovid>(s => s.From(0).Take(1000).MatchAll().Sort(ss => ss.Descending(d => d.DateReported)));
+            var searchResponse = _elasticClient.Search<DailyCovid>(s => s.From(0).Take(2000).MatchAll().Sort(ss => ss.Descending(d => d.DateReported)));
             var dailyCovids = searchResponse.Documents.ToList();
             var viewModelList = new DailyCovidViewModel
             {
@@ -53,7 +53,7 @@ namespace Covid19GlobalData.Controllers
                .GreaterThanOrEquals(selectedFields.StartDateTime.Value.ToString("MM/dd/yyyy",CultureInfo.InvariantCulture))
                .LessThanOrEquals(selectedFields.EndDateTime.Value.ToString("MM/dd/yyyy",CultureInfo.InvariantCulture))
                .Format("MM/dd/yyyy")))
-               .Size(300));
+               .Size(1000));
                 var searchResponseList = searchResponse.Documents.ToList();
                 var dailyCovidViewModel = new DailyCovidViewModel
                 {
@@ -62,6 +62,27 @@ namespace Covid19GlobalData.Controllers
                 return Ok(dailyCovidViewModel);
             }
             return Ok("");
+        }
+
+        public IActionResult GetMaxCase()
+        {
+            DateTime date = new DateTime(2020,9,27);
+            var searchResponse = _elasticClient.Search<DailyCovid>(s => s
+            .Query(q => q
+            .DateRange(c => c
+               .Name("by_date")
+               .Field(p => p.DateReported)
+               .GreaterThanOrEquals(date.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture))
+               .Format("MM/dd/yyyy")))
+               .Size(235)
+               .Sort(a => a
+               .Descending(d => d.CumulativeCases)));
+            var searchResponseList = searchResponse.Documents.ToList();
+            var dailyCovidViewModel = new DailyCovidViewModel
+            {
+                DailyCovids = searchResponseList
+            };
+            return Ok(dailyCovidViewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
