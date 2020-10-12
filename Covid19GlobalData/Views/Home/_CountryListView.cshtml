@@ -2,7 +2,7 @@
 @using MoreLinq
 <div class="form-group">
     <div class="row">
-        <div class="col-6 mb-4">
+        <div class="col-6 mb-4"  style="padding-left:0;">
             <select id="select" class="form-control">
                 @if (Model != null)
                 {
@@ -12,21 +12,50 @@
                         <option class="option" value="@item.CountryCode">@item.Country</option>
                     }
                 }
-            </select>            
+            </select>
         </div>
-        <div class="col-6 countCase text-right" >
+        <div class="col-3 countCase text-right  offset-2">
 
         </div>
-        <div class="col-6 ">
-            <script>
-                $(function () {
-                    $("#datepicker").datepicker();
-                });
-            </script>
-            <input class="input-group-text" type="text" id="datepicker" placeholder="Choose a date">
+        <div class="col-1">
+            <button type="submit" value="search" class="btn btn-outline-primary float-right " id="searchButton">Search</button>
         </div>
-        <div class="col-6">               
-                <button type="submit" value="search" class="btn btn-outline-primary float-right" id="searchButton">Search</button>            
-        </div>
+    </div>
+    <div class="row">
+        <script>
+            $(function () {
+                var dateFormat = "mm/dd/yy",
+                    from = $("#from")
+                        .datepicker({
+                            changeMonth: true,
+                            numberOfMonths: 1,
+                            maxDate: new Date(2020, 9, 27)
+                        })
+                        .on("change", function () {
+                            to.datepicker("option", "minDate", getDate(this));
+                        }),
+                    to = $("#to").datepicker({
+                        changeMonth: true,
+                        numberOfMonths: 1,
+                        maxDate: new Date(2020, 9, 27)
+                    })
+                        .on("change", function () {
+                            from.datepicker("option", "maxDate", getDate(this));
+                        });
+
+                function getDate(element) {
+                    var date;
+                    try {
+                        date = $.datepicker.parseDate(dateFormat, element.value);
+                    } catch (error) {
+                        date = null;
+                    }
+
+                    return date;
+                }
+            });
+        </script>
+        <input class="input-group-text mr-2" type="text" id="from" placeholder="Choose a starting date">
+        <input class="input-group-text" type="text" id="to" placeholder="Choose an ending date">
     </div>
 </div>

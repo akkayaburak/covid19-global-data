@@ -1,27 +1,21 @@
 ﻿
-
-
-//$('#select').on('change', function () {
-    
-//    console.log(model);
-  
-
-//})
-
-
-$('#searchButton').on('click', function (){
-    var date = $('#datepicker').val();
+$('#searchButton').on('click', function () {
+    var dateFrom = $('#from').val();
+    var dateTo = $('#to').val();
     var countryCode = $("#select").val();
     var model =
     {
-        "Country": "",
-        "CountryCode": countryCode,
-        "CumulativeCases": "0",
-        "CumulativeDeaths": "0",
-        "NewCases": "0",
-        "NewDeaths": "0",
-        "WhoRegion": "Test",
-        "DateReported": date
+        "StartDateTime": dateFrom,
+        "EndDateTime": dateTo,
+        "DailyCovid": {
+            "Country": "",
+            "CountryCode": countryCode,
+            "CumulativeCases": "0",
+            "CumulativeDeaths": "0",
+            "NewCases": "0",
+            "NewDeaths": "0",
+            "WhoRegion": "Test"
+        }
     };
     $.ajax({
         url: '/Home/GetDailyCovidByFilters',

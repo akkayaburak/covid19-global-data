@@ -10,6 +10,7 @@ using Nest;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Covid19GlobalData.Controllers
 {
@@ -34,7 +35,7 @@ namespace Covid19GlobalData.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetDailyCovidByFilters([FromBody]DailyCovid selectedFields)
+        public IActionResult GetDailyCovidByFilters([FromBody]DailyCovidDate selectedFields)
         {
 
             if (ModelState.IsValid)
@@ -44,15 +45,15 @@ namespace Covid19GlobalData.Controllers
                .Term(c => c
                .Name("by_country")
                .Field(p => p.CountryCode)
-               .Value(selectedFields.CountryCode))
+               .Value(selectedFields.DailyCovid.CountryCode))
                &&
-               q.Term(c => c
-               .Field(p => p
-               .DateReported)
-               .Value(selectedFields.DateReported)))
-               .Size(200)
-               .Sort(ss => ss
-               .Descending(d => d.DateReported)));
+               q.DateRange(c => c
+               .Name("by_date")
+               .Field(p => p.DateReported)
+               .GreaterThanOrEquals(selectedFields.StartDateTime.Value.ToString("MM/dd/yyyy",CultureInfo.InvariantCulture))
+               .LessThanOrEquals(selectedFields.EndDateTime.Value.ToString("MM/dd/yyyy",CultureInfo.InvariantCulture))
+               .Format("MM/dd/yyyy")))
+               .Size(300));
                 var searchResponseList = searchResponse.Documents.ToList();
                 var dailyCovidViewModel = new DailyCovidViewModel
                 {

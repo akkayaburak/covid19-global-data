@@ -30,6 +30,8 @@ namespace Covid19GlobalData.Models
         public string WhoRegion { get; set; }
 
         [Date(Name="Date_reported")]
-        public DateTime? DateReported { get; set; }
+        public DateTime?DateReported { get; set; }
+
+
     }
 }
